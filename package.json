@@ -4,7 +4,7 @@
   "description": "A novel exchange web application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "author": "Shobha",
   "license": "ISC",
