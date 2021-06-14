@@ -2,6 +2,8 @@ const express = require('express')
 const router= express.Router()
 const mongoose = require('mongoose')
 const passport = require('passport')
+const multer = require('multer')
+const path = require('path')
 
 //load person model
 const Person = require("../../models/Person")
@@ -12,6 +14,17 @@ const { route } = require('./auth')
 
 //static files
 router.use(express.static("public"))
+
+//multer setting
+var storage =multer.diskStorage({
+    destination: function (req,file, cb){
+        cb(null, './public/image_uploads')
+    },
+    filename: function(req,file,cb){
+        cb(null,file.fieldname+'-' + Date.now()+ path.extname(file.originalname))    
+    }
+})
+
 
 //@type      GET
 //@route     /api/profile/
@@ -31,6 +44,24 @@ router.get('/',passport.authenticate('jwt',{session:false}), (req,res)=>{
     .catch( err => console.log("Got some error in profile "+err))
 })
 
+//@type      GET
+//@route     /api/profile/edit/
+//@desc      route for updating/saving user profile
+//@access    PRIVATE
+
+router.get('/edit/',passport.authenticate('jwt',{session:false}), (req,res)=>{
+    Profile.findOne({user: req.user.id})
+    .then(
+        profile =>{
+            if(!profile) {
+                return res.status(404).json({profilenotfound: "no profile found"})
+            }
+            res.render("profile_edit")
+        }
+    )
+    .catch( err => console.log("Got some error in profile "+err))
+})
+
 //@type      POST
 //@route     /api/profile/edit/
 //@desc      route for updating/saving user profile
@@ -40,15 +71,35 @@ router.post('/edit/',passport.authenticate('jwt',{session:false}), (req,res)=>{
     const profileValues= {}
     if(req.body.name) profileValues.name = req.body.name
     if(req.body.address) profileValues.address = req.body.address
+    if(req.body.contact) profileValues.contact = req.body.contact
+    
+
+    var upload = multer(
+    {storage: storage
+        }).single('profilepic')
     
     //do database stuff
     Profile.findOne({user: req.user.id})
     .then(profile => {
         if(profile)     //update
         {
+            upload(req,res, (error) =>{
+                if(error){
+                    res.render("index",{
+                        message: error
+                    })
+                }
+                else{
+                    res.render("profile_edit",{
+                        message: "Successfully uploaded",
+                        filename: `image_uploads/${req.file.filename}`  
+                            
+                    })
+                }
+                })
             Profile.findOneAndUpdate({user: req.user.id},{$set: profileValues}, {new: true})
             .then(profile => res.json(profile))
-            .catch(err => console.log("Problem in update "+err))
+            .catch(err => console.log("Problem in update "+err))        //some error is there in update
         }else{
             res.json({updateerror: 'some error occured'})
         }
@@ -116,13 +167,10 @@ router.post('/edit/add/novel/', passport.authenticate('jwt',{session:false}), (r
             const newNovel ={
                 name: req.body.name,
                 author: req.body.author,
-                genre: req.body.country,
-                from: req.body.from,
-                to: req.body.to,
-                current: req.body.current,
+                genre: req.body.genre,
                 details: req.body.details
             }
-            profile.workrole.push(newWork)
+            profile.novel.push(newNovel)
             profile.save()
             .then(profile => res.json(profile))
             .catch(err => console.log(err))
@@ -137,17 +185,17 @@ router.post('/edit/add/novel/', passport.authenticate('jwt',{session:false}), (r
 //@desc      route for deleting a workrole of a person
 //@access    PRIVATE
 
-router.delete('/workrole/:w_id', passport.authenticate('jwt',{session:false}),(req,res)=>{
+router.delete('/edit/delete/:w_id', passport.authenticate('jwt',{session:false}),(req,res)=>{
     Profile.findOne({user: req.user.id})
     .then( profile=>{
         if(!profile)
             res.json({notfound: 'Profile not found'})
         else{
-            const removethis = profile.workrole
+            const removethis = profile.novel
             .map(item => item.id)
-            .indexOf(req.params.w_id)           //we have the index of id of workrole to be removed in removethis
+            .indexOf(req.params.w_id)          
             
-            profile.workrole.splice(removethis, 1)
+            profile.novel.splice(removethis, 1)
 
             profile.save()
             .then(profile => res.json(profile))

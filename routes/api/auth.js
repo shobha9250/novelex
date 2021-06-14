@@ -110,10 +110,10 @@ router.post('/login',(req,res) => {
                         {expiresIn: 3600},
                         (err, token) => {
                             if(err) throw err;
-                            res.json({
-                                success: true,
-                                token: "Bearer "+token     
-                            })
+                             res.json({                       
+                                 success: true,           
+                                 token: "Bearer "+token     
+                             })
                         }
                     )
                 }

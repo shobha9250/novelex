@@ -4,7 +4,6 @@ const Schema = mongoose.Schema
 const ProfileSchema = new Schema({
     user:{
         type: Schema.Types.ObjectId,      
-        ref:"myPerson"      
     },
     username:{
         type: String,
@@ -12,11 +11,15 @@ const ProfileSchema = new Schema({
     },
     name:{
         type: String,
-        required: true,
+        default:""
     },
     address:{
         type: String,
-        required: true,
+        default:""
+    },
+    contactno:{
+        type: String,
+        default:""
     },
     profilepic:  {
         type : String,
