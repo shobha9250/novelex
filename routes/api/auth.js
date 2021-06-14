@@ -1,9 +1,9 @@
+require('dotenv').config();
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jsonwt = require("jsonwebtoken");
 const passport = require("passport");
-const key = require("../../setup/myurl");
 
 //static files
 router.use(express.static("public"));
@@ -104,8 +104,8 @@ router.post("/login", (req, res) => {
               email: person.email,
             };
 
-            // passing json web token to url as queryies
-            res.redirect("/api/profile/?valid=" +   jsonwt.sign(payload, key.secret, { expiresIn: 3600 }));
+            // passing json web token to url as queries ?calid is varaible that hold my json web token
+            res.redirect("/api/profile/?valid=" +   jsonwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
           
         
         } else {

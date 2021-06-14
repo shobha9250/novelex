@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')
 const router= express.Router()
 const mongoose = require('mongoose')
@@ -40,7 +41,7 @@ router.get('/', (req,res)=>{
     let token = req.query.valid;
     
     //using verify to check my token
-    jwt.verify(token, "mystrongsecret",(err,user)=>{
+    jwt.verify(token, process.env.secret,(err,user)=>{
         if(!err){
 
         Profile.findOne({user: user.id})

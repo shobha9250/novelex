@@ -1,9 +1,13 @@
+// npm install dotenv package then this is require statement 
+// in even files we do not put our strings in semicolons i will send just paste in where index.js is
+require('dotenv').config();
 const express = require('express')
 const ejs = require("ejs");
 const path= require("path")
 const bodyparser= require('body-parser')
 const passport= require('passport')
 const mongoose= require('mongoose')
+
 
 const app= express();
 const port = process.env.PORT || 3000;
@@ -23,7 +27,7 @@ app.use(bodyparser.json())
 app.set("view engine","ejs")
 
 //monogoDB configuration
-const mongoDB = require('./setup/myurl').mongoURL
+const mongoDB = process.env.mongoURL
 
 //connecting monoDB
 mongoose
