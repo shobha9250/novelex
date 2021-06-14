@@ -3,7 +3,7 @@ const router = express.Router()
 const bcrypt =require('bcryptjs')
 const jsonwt = require('jsonwebtoken')
 const passport = require('passport')
-const key = require('../../setup/myurl')
+const key = require('../../setup/.env')
 
 //static files
 router.use(express.static("public"))

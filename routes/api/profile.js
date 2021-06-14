@@ -49,7 +49,7 @@ router.get('/',passport.authenticate('jwt',{session:false}), (req,res)=>{
 //@desc      route for updating/saving user profile
 //@access    PRIVATE
 
-router.get('/edit/',passport.authenticate('jwt',{session:false}), (req,res)=>{
+router.get('/edit/', (req,res)=>{
     Profile.findOne({user: req.user.id})
     .then(
         profile =>{

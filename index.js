@@ -23,7 +23,7 @@ app.use(bodyparser.json())
 app.set("view engine","ejs")
 
 //monogoDB configuration
-const mongoDB = require('./setup/myurl').mongoURL
+const mongoDB = process.env.mongoURL
 
 //connecting monoDB
 mongoose
