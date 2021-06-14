@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 const multer = require('multer')
 const path = require('path')
+const jwt = require('jsonwebtoken')
 
 //load person model
 const Person = require("../../models/Person")
@@ -11,6 +12,7 @@ const Person = require("../../models/Person")
 //load profile model
 const Profile= require("../../models/Profile")
 const { route } = require('./auth')
+const { JsonWebTokenError } = require('jsonwebtoken')
 
 //static files
 router.use(express.static("public"))
@@ -31,9 +33,18 @@ var storage =multer.diskStorage({
 //@desc      route for personal user profile
 //@access    PRIVATE
 
-router.get('/',passport.authenticate('jwt',{session:false}), (req,res)=>{
-    Profile.findOne({user: req.user.id})
-    .then(
+
+router.get('/', (req,res)=>{
+    
+    //getting token from query
+    let token = req.query.valid;
+    
+    //using verify to check my token
+    jwt.verify(token, "mystrongsecret",(err,user)=>{
+        if(!err){
+
+        Profile.findOne({user: user.id})
+        .then(
         profile =>{
             if(!profile) {
                 return res.status(404).json({profilenotfound: "no profile found"})
@@ -42,6 +53,12 @@ router.get('/',passport.authenticate('jwt',{session:false}), (req,res)=>{
         }
     )
     .catch( err => console.log("Got some error in profile "+err))
+        }
+        else{
+            return res.status(403).json({message : "User not authorised"})
+        }
+    })
+
 })
 
 //@type      GET
