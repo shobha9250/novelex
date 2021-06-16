@@ -3,55 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Document</title>
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/profileStyle.css" />
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <title>Document</title>
 </head>
 <body>
     <div class="container">
-        <div class="row"></div>
-        <div class="row personal_info align-items-start">
-            <div class="col-sm-5 col-md-4 order-sm-last p-5">
-                <img src="<%=profilepic%>" id="profile_image">
-                <form action=""><input type="file">
-                <button type="submit">Upload</button>
-                </form>
-            </div>
-            <div class="col-sm-7 col-md-8 order-sm-first" >
-                <div class="row p-4"><h1><%=username%></h1></div>
-                <form action="">
-                <ul class="personal_info_list">
-                    <li>Name: <input type="text" value="<%=name%>"></li>
-                    <li>Contact: <input type="text" value="<%=name%>"></li>
-                    <li>Address: <input type="text" value="<%=name%>"></li>
-                    <li>Last modified: <input type="text" value="<%=name%>"></li>
-                </ul>
-                <div class="row p-3 m-3 mt-5"><button class="col-2 p-1 btn btn-primary mt-5 " type="submit">submit</button></div>
-            </form>
-                
-            </div>
-        </div>
-        
-        <div class="row my_novels mt-2 p-4">
-            <div class="col-12 p-3"><h1>My Novels</h1></div>
+    <div class="row">
+        <!-- if the user is logged in -->
+        <a href=""><img src="<%=profilepic%>" id="profile_icon"></a>
+        <a href="">logout</a>
 
-            <div class="row"> 
-                <div class="col-md-5 col-sm-3">
-                    <button class="btn-sm btn-success">Add</button>
-                </div>
-
-                <div class="col-md-7 col-sm-9">
-                    <form action="" class="remove_novel_button">
-                        <input type="text">
-                        <button type="submit" class="btn-sm btn-danger">Remove</button>
-                    </form>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="row"></div>
+        <!-- if user is not logged in -->
+        <a href="">Signin</a>
+        <a href="">Signup</a>
+    </div>
     </div>
 </body>
 </html>

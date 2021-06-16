@@ -2,23 +2,32 @@
 *{
     font-family: "Poppins", sans-serif;
 }
-.personal_info_list{
+.personal_info_list, .novel_info_list{
     list-style: none;
     line-height: 2rem;
     word-wrap: break-word;
 
 }
-#profile_image{
+.personal_info_list input , .novel_info_list input{
+    height:1.5rem;
+    width:50%;
+}
+.profile_image{
     height:100%;
     width:100%;
+    border: 1px solid gray;
 }
 
-.personal_info , .my_novels{
+.personal_info , .mynovels_info, .mynovels_edit , .my_genres , .personal_info_edit ,.navigation_bar{
     border: 1px solid gray;
     border-radius: 10px;
 }
-#profile_image{
-    border: 1px solid gray;
+
+.personal_info , .mynovels_info{
+    display:flex;
+}
+.personal_info_edit, .mynovels_edit{
+    display:none;
 }
 
 
@@ -33,15 +42,30 @@
     float:right;
     padding-right:0px;
 } 
+
+.hide_infor{
+    display:none;
+}
+.display_infor{
+    display:flex;
+}
+
+.novel_image{
+    height:80%;
+    width:80%;
+    border: 1px solid gray;
+}
+
+
 @media (max-width:574px){
-    .personal_info , .my_novels{
+    .personal_info , .mynovels_info, .mynovels_edit ,.my_genres , .personal_info_edit{
         border: 0px;
     }
     .remove_novel_button{
         float:left;
         margin-top:10px;
     }
-    #profile_image{
+    .profile_image, .novel_image{
         height:80%;
         width:80%;
         
@@ -52,7 +76,9 @@
     .personal_info h1{
         margin-left:10px;
     }
-     
+    .novel_info_list{
+        margin-top:20px;
+    }
 } 
 @media(max-width:334px)
 {
@@ -61,4 +87,5 @@
         margin-bottom: 10px;
         margin-top:20px;
     }
+    
 }

@@ -18,15 +18,6 @@ const { JsonWebTokenError } = require('jsonwebtoken')
 //static files
 router.use(express.static("public"))
 
-//multer setting
-var storage =multer.diskStorage({
-    destination: function (req,file, cb){
-        cb(null, './public/image_uploads')
-    },
-    filename: function(req,file,cb){
-        cb(null,file.fieldname+'-' + Date.now()+ path.extname(file.originalname))    
-    }
-})
 
 
 //@type      GET
@@ -62,85 +53,45 @@ router.get('/', (req,res)=>{
 
 })
 
-//@type      GET
-//@route     /api/profile/edit/
-//@desc      route for updating/saving user profile
-//@access    PRIVATE
-
-router.get('/edit/', (req,res)=>{
-    //getting token from query
-    let token = req.query.valid;
-    
-    //using verify to check my token
-    jwt.verify(token, process.env.secret,(err,user)=>{
-        if(!err){
-
-        Profile.findOne({user: user.id})
-        .then(
-        profile =>{
-            if(!profile) {
-                return res.status(404).json({profilenotfound: "no profile found"})
-            }
-            res.render('personalinfo_edit',profile)
-        }
-    )
-    .catch( err => console.log("Got some error in profile "+err))
-        }
-        else{
-            return res.status(403).json({message : "User not authorised"})
-        }
-    })
-})
 
 //@type      POST
 //@route     /api/profile/edit/
 //@desc      route for updating/saving user profile
 //@access    PRIVATE
 
-router.post('/edit/',passport.authenticate('jwt',{session:false}), (req,res)=>{
-    const profileValues= {}
-    if(req.body.name) profileValues.name = req.body.name
-    if(req.body.address) profileValues.address = req.body.address
-    if(req.body.contact) profileValues.contact = req.body.contact
+router.post('/edit/',(req,res)=>{
+    let token = req.query.valid;
     
-
-    var upload = multer(
-    {storage: storage
-        }).single('profilepic')
+    //using verify to check my token
+    jwt.verify(token, process.env.secret,(err,user)=>{
+    if(!err){
+        console.log("got verified")
+        const profileValues= {}
+        if(req.body.name) profileValues.name = req.body.name
+        if(req.body.address) profileValues.address = req.body.address
+        if(req.body.contact) profileValues.contact = req.body.contact
     
-    //do database stuff
-    Profile.findOne({user: req.user.id})
-    .then(profile => {
-        if(profile)     //update
-        {
-            upload(req,res, (error) =>{
-                if(error){
-                    res.render("index",{
-                        message: error
-                    })
-                }
-                else{
-                    res.render("profile_edit",{
-                        message: "Successfully uploaded",
-                        filename: `image_uploads/${req.file.filename}`  
-                            
-                    })
-                }
-                })
-            Profile.findOneAndUpdate({user: req.user.id},{$set: profileValues}, {new: true})
-            .then(profile => {
+        //do database stuff
+        Profile.findOne({user: user.id})
+        .then(profile => {
+            if(profile)     
+            {
+                Profile.findOneAndUpdate({user: user.id},{$set: profileValues}, {new: true})
+                .then(profile => {
                 res.redirect("/api/profile/?valid=" +   jsonwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
-            })
-            .catch(err => console.log("Problem in update "+err))        //some error is there in update
-        }else{
-            res.json({updateerror: 'some error occured'})
-        }
+                })
+                .catch(err => console.log("Problem in update "+err))       
+            }else{
+                res.json({updateerror: 'some error occured'})
+            }
 
-    })
-    .catch(err => console.log("Problem in fetching profile "+err))
-}
-
-)
+        })
+        .catch(err => console.log("Problem in fetching profile "+err))
+    }else{
+        return res.status(403).json({message : "User not authorised"})
+    }
+})})
+    
 
 //@type      GET
 //@route     /api/profile/username/:username
