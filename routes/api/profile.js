@@ -6,6 +6,8 @@ const passport = require('passport')
 const multer = require('multer')
 const path = require('path')
 const jwt = require('jsonwebtoken')
+const {GridFsStorage} = require('multer-gridfs-storage')
+const util= require('util')
 
 //load person model
 const Person = require("../../models/Person")
@@ -17,6 +19,18 @@ const { JsonWebTokenError } = require('jsonwebtoken')
 
 //static files
 router.use(express.static("public"))
+
+//Multer middleware
+var storage = new GridFsStorage({
+    url: process.env.mongoURL,
+    options: {useNewUrlParser: true, useUnifiedTopology: true},
+    file: (req,file)=>{
+        filename: file.fieldname+'-' + Date.now()+ path.extname(file.originalname)
+    }
+})
+
+var upload = multer({storage: storage}).single("profileimage")
+//var uploadFilesMiddleware = util.promisify(uploadfile);
 
 
 
@@ -91,6 +105,49 @@ router.post('/edit/',(req,res)=>{
         return res.status(403).json({message : "User not authorised"})
     }
 })})
+
+
+
+
+
+
+//uploading profile pic
+
+router.post('/addprofilepic',(req,res)=>{
+    let token = req.query.valid;
+    
+    //using verify to check my token
+    jwt.verify(token, process.env.secret,(err,user)=>{
+    upload(req,res, (error) =>{
+        if(error){
+            res.json({
+                message: error
+            })
+        }
+        else{
+            const profileValues= {}
+            profileValues.profilepic = `${req.file.filename}`;
+            Profile.findOne({user: user.id})
+            .then(profile => {
+            if(profile)     
+            {
+                Profile.findOneAndUpdate({user: user.id},{$set: profileValues}, {new: true})
+                .then(profile => {
+                res.redirect("/api/profile/?valid=" +   jsonwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
+                })
+                .catch(err => console.log("Problem in update "+err))       
+            }else{
+                res.json({updateerror: 'some error occured'})
+            }
+
+        })
+        .catch(err => console.log("Problem in fetching profile "+err))
+        }
+    })  
+})
+})
+
+
     
 
 //@type      GET

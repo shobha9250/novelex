@@ -50,9 +50,11 @@
         <div class="row personal_info_edit align-items-start">
             <div class="col-sm-5 col-md-4 order-sm-last p-5">
                 <img src="<%=profilepic%>" class="profile_image">
-                <form action="" method="POST"><input type="file">
+
+                <form action="/api/profile/addprofilepic" method="POST" enctype="multipart/form-data"><input type="file" name="profileimage" id="profilepic_upload">
                 <button type="submit" class="btn-sm">Upload</button>
                 </form>
+
             </div>
             <div class="col-sm-7 col-md-8 order-sm-first" >
 
@@ -86,7 +88,7 @@
                 </div>
 
                 <div class="col-md-7 col-sm-9">
-                    <form action="" class="remove_novel_button">
+                    <form action="/api/profile/removenovel" class="remove_novel_button">
                         <input type="text">
                         <button type="submit" class="btn-sm btn-danger" style="width: fit-content;">Remove</button>
                     </form>
@@ -104,13 +106,13 @@
             <div class="row align-items-start" style="padding: -30px;"> 
                 <div class="col-sm-5 col-md-4 order-sm-last mt-2">
                     <img src="<%=profilepic%>" class="novel_image">
-                    <form action="" method="POST"><input type="file">
+                    <form action="/api/profile/addnovelpic" method="POST"><input type="file">
                     <button type="submit" class="btn-sm">Upload</button>
                     </form>
                 </div>
 
                 <div class="col-sm-7 col-md-8 order-sm-first mt-2" >
-                    <form action="/api/profile/edit" method="POST">
+                    <form action="/api/profile/addnovelinfo" method="POST">
                     <ul class="novel_info_list">
                         <li><pre>Name:    <input type="text"></pre></li>
                         <li><pre>Author:  <input type="text"></pre></li>
