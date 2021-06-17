@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Document</title>
+    <title>profile</title>
     <script
       src="https://kit.fontawesome.com/64d58efce2.js"
       crossorigin="anonymous"
@@ -36,7 +36,7 @@
                 <div class="row p-4"><h1><%=username%></h1></div>
                 <ul class="personal_info_list">
                     <li>Name: <%=name%></li>
-                    <li>Contact: <%=name%></li>
+                    <li>Contact: <%=contactno%></li>
                     <li>Address: <%=address%></li>
                     <li>Last modified: <%=name%></li>
                 </ul>
@@ -60,10 +60,10 @@
 
                 <div class="row p-4"><h1><%=username%></h1></div>
                 <form action="/api/profile/edit" method="POST">
-                <ul class="personal_info_list">
-                    <li><pre>Title:          <input type="text" value="<%=name%>"></pre></li>
-                    <li><pre>Contact:       <input type="text" value="<%=contactno%>"></pre></li>
-                    <li><pre>Address:       <input type="text" value="<%=address%>"></pre></li>
+                <ul class="personal_info_list">z
+                    <li><pre>Name:          <input type="text" name="name" value="<%=name%>"></pre></li>
+                    <li><pre>Contact:       <input type="text" name="contact" value="<%=contactno%>"></pre></li>
+                    <li><pre>Address:       <input type="text" name="address" value="<%=address%>"></pre></li>
                     <li><pre>Last modified: <%=date%></pre></li>
                 </ul>
                 <div class="row p-3 m-3 mt-5">
@@ -112,12 +112,12 @@
                 </div>
 
                 <div class="col-sm-7 col-md-8 order-sm-first mt-2" >
-                    <form action="/api/profile/addnovelinfo" method="POST">
+                    <form action="/api/profile/edit/add/novel" method="POST">
                     <ul class="novel_info_list">
-                        <li><pre>Name:    <input type="text"></pre></li>
-                        <li><pre>Author:  <input type="text"></pre></li>
-                        <li><pre>Genre:   <input type="text"></pre></li>
-                        <li><pre>Details: <input type="text"></pre></li></pre></li>
+                        <li><pre>Name:    <input type="text" name="name"></pre></li>
+                        <li><pre>Author:  <input type="text" name="author"></pre></li>
+                        <li><pre>Genre:   <input type="text" name="genre"></pre></li>
+                        <li><pre>Details: <input type="text" name="details"></pre></li></pre></li>
                     </ul>
                     <div class="row p-3 m-3 mt-5">
                         <button class="btn-sm btn-success mt-5 " style="width:fit-content;" type="submit">Add</button>
