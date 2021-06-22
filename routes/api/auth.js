@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const jsonwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const passport = require("passport");
 
 //static files
@@ -41,6 +41,11 @@ router.post("/signup", (req, res) => {
               email: req.body.email,
               password: req.body.password,
             });
+            const payload = {
+              id: newPerson.id,
+              username: newPerson.username,
+              email: newPerson.email,
+            };
 
             // encrypt password using bcrypt
             bcrypt.genSalt(10, (err, salt) => {
@@ -50,7 +55,7 @@ router.post("/signup", (req, res) => {
                 //saving data to database
                 newPerson
                   .save()
-                  .then((person) => res.json(person))
+                  .then()
                   .catch((err) => console.log(err));
               });
             });
@@ -63,7 +68,8 @@ router.post("/signup", (req, res) => {
             newProfile
               .save()
               .then((profile) => {
-                res.redirect("/api/profile/?valid=" +   jsonwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
+                // passing json web token to url as queries ?calid is varaible that hold my json web token
+                res.redirect("/?valid=" +   jwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
               })
               .catch((err) => console.log(err));
           }
@@ -107,8 +113,8 @@ router.post("/login", (req, res) => {
             };
 
             // passing json web token to url as queries ?calid is varaible that hold my json web token
-            res.redirect("/api/profile?valid=" +   jsonwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
-            console.log(jsonwt.sign(payload, process.env.secret, { expiresIn: 3600 }))
+            res.redirect("/?valid=" +   jwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
+            
         
         } else {
             res.status(400).json({ passworderror: "password is not correct" });
@@ -118,5 +124,25 @@ router.post("/login", (req, res) => {
     })
     .catch((err) => console.log(err));
 });
+
+router.get('/logout',(req,res) =>{
+  let token= req.query.valid;
+
+  jwt.verify(token, process.env.secret,(err,user)=>{
+    if(err)
+      res.redirect("//localhost:3000/");
+
+    Person.findOne({ user: req.user.id })
+    .then((person) => {
+        const payload = {
+        id: person.id,
+        username: person.username,
+        email: person.email,
+      };
+      res.redirect("/?valid=" +   jwt.sign(payload, process.env.secret, { expiresIn: 0 }));
+    })
+    .catch((err) => console.log(err));
+  })
+})
 
 module.exports = router;
