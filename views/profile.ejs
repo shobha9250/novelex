@@ -108,7 +108,7 @@
 
                 <div class="col-md-7 col-sm-9">
                     <form action="/api/profile/removenovel" class="remove_novel_button" method="POST">
-                        <input type="text">
+                        <input type="text" name="toberemoved" required>
                         <button type="submit" class="btn-sm btn-danger" style="width: fit-content;">Remove</button>
                     </form>
                 </div>
@@ -128,9 +128,9 @@
                 <div class="col-sm-7 col-md-8 order-sm-first mt-2" >
                     <form action="/api/profile/edit/add/novel" method="POST" enctype="multipart/form-data">
                     <ul class="novel_info_list">
-                        <li><pre>Name:    <input type="text" name="name"></pre></li>
-                        <li><pre>Author:  <input type="text" name="author"></pre></li>
-                        <li><pre>Genre:   <input type="text" name="genre"></pre></li>
+                        <li><pre>Name:    <input type="text" name="name" required></pre></li>
+                        <li><pre>Author:  <input type="text" name="author" required></pre></li>
+                        <li><pre>Genre:   <input type="text" name="genre" required></pre></li>
                         <li><pre>Details: <input type="text" name="details"></pre></li></pre></li>
                         <li><pre>image: <input type="file" name="novelimage"></pre></li></pre></li>
 

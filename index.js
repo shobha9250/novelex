@@ -1,3 +1,10 @@
+//logout feature
+//searching a user with username , add this option
+//searching novels for a particular genre
+
+
+
+
 // npm install dotenv package then this is require statement 
 // in even files we do not put our strings in semicolons i will send just paste in where index.js is
 require('dotenv').config();

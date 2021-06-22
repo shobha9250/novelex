@@ -256,8 +256,8 @@ router.post("/edit/add/novel/", uploadnovelimage, (req, res) => {
   });
 });
 
-//@type      DELETE
-//@route     /api/profile/edit/delete/novel
+//@type      POST
+//@route     /api/profile/removenovel
 //@desc      route for deleting a workrole of a person
 //@access    PRIVATE
 
@@ -276,9 +276,8 @@ router.post("/removenovel", (req, res) => {
 
           profile.novel.splice(removethis, 1);
 
-          profile.findOneAndUpdate()
-            .then(
-              res.redirect("/api/profile/?valid=" + token))
+          profile.save()
+            .then(res.redirect("/api/profile/?valid=" + token))
             .catch((err) => console.log(err));
         }
       })
