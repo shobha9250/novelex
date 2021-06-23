@@ -6,35 +6,56 @@ const passport = require("passport");
 const multer = require("multer");
 const path = require("path");
 const jwt = require("jsonwebtoken");
+const crypto = require('crypto');
+const {GridFsStorage} = require('multer-gridfs-storage');
+const Grid = require('gridfs-stream');
 
 //load person model
 const Person = require("../../models/Person");
 
 //load profile model
 const Profile = require("../../models/Profile");
-const { route } = require("./auth");
+const { route, connect } = require("./auth");
 const { JsonWebTokenError } = require("jsonwebtoken");
+const { rejects } = require("assert");
+const { resolve } = require("path");
 
 //static files
 router.use(express.static("public"));
 
 
+// //init gfs
+let gfs;
 
+const conn = mongoose.createConnection(process.env.mongoURL,{ useNewUrlParser: true , useUnifiedTopology: true});
 
-//multer setting
-var storage =multer.diskStorage({
-    destination: function (req,file, cb){
-        cb(null, './public/myupload')
-    },
-    filename: function(req,file,cb){
-        cb(null,file.fieldname+'-' + Date.now()+ path.extname(file.originalname))      
-       }
+conn.once('open',() => {
+  //init stream
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection('uploads')   //collection name
 })
 
-var upload = multer(
-    {storage: storage
-    }).single('profileimage')
-
+//create storage engine
+const storage = new GridFsStorage({
+  url:process.env.mongoURL,
+  file: (req,file) => {
+    return new Promise((resolve,reject)=>{
+      crypto.randomBytes(16, (err, buf) => {
+        if(err){
+          return reject(err);
+        }
+        const filename = buf.toString('hex') + path.extname(file.originalname);
+        const fileInfo = {
+          filename: filename,
+          bucketName: 'uploads'   //should match the collection name
+        };
+        resolve(fileInfo);
+      })
+    })
+  }
+})
+const uploadprofileimage =multer({storage}).single("profileimage");
+const uploadnovelimage =multer({storage}).single("novelimage");
 
 //@type      GET
 //@route     /api/profile/
@@ -56,8 +77,25 @@ router.get("/", (req, res) => {
               .status(404)
               .json({ profilenotfound: "no profile found" });
           }
-          console.log(profile);
-          res.render("profile", profile);
+
+          gfs.files.find().toArray((err, files) => {
+            if(err)
+              return console.log ("there is some error");
+
+            if(!files || files.length === 0){
+              res.render("profile", {profile:profile, files:false});
+            }
+            else{
+              files.map(file =>{
+                if(file.contentType == 'image/jpeg' || file.contentType == 'image/png'){
+                  file.isImage = true;
+                }else{
+                  file.isImage = false;
+                }
+              })
+              res.render("profile", {profile:profile, files:files, token:token});
+            }
+          })
         })
         .catch((err) => console.log("Got some error in profile " + err));
     } else {
@@ -80,6 +118,7 @@ router.post("/edit/", (req, res) => {
       if (req.body.name) profileValues.name = req.body.name;
       if (req.body.address) profileValues.address = req.body.address;
       if (req.body.contact) profileValues.contactno = req.body.contact;
+      if (req.body.myGenre) profileValues.myGenre = req.body.myGenre;
       console.log(profileValues);
       //do database stuff
       Profile.findOne({ user: user.id })
@@ -115,84 +154,69 @@ router.post('/addprofilepic',(req,res)=>{
     jwt.verify(token, process.env.secret,(err,user)=>{
         if(err)
             return console.log("not authorised")
-        upload(req,res, (error) =>{
-        if(error){
+        uploadprofileimage(req,res, (error) =>{
+          if(error){
             res.json({
-                message: error
+              message: error
             })
-        }
-        else{
-            const profileValues= {}
-            profileValues.profilepic = `/myupload/${req.file.filename}`;
-            Profile.findOne({user: user.id})
-            .then(profile => {
-            if(profile)     
-            {
-                Profile.findOneAndUpdate({user: user.id},{$set: profileValues}, {new: true})
-                .then(profile => {
-                console.log("Successful ff");
-                })
-                .catch(err => console.log("Problem in update "+err))       
-            }else{
-                res.json({updateerror: 'some error occured'})
             }
+            else{
+              const profileValues= {}
+              if(req.file)
+                profileValues.profilepic = `${req.file.filename}`;
+              Profile.findOne({user: user.id})
+              .then(profile => {
+              if(profile)     
+                {
+                      Profile.findOneAndUpdate({user: user.id},{$set: profileValues}, {new: true})
+                      .then(profile => {
+                      console.log("Successful ff");
+                      res.redirect("/api/profile/?valid=" + token);
+                      })
+                      .catch(err => console.log("Problem in update "+err))       
+                 }else{
+                      res.json({updateerror: 'some error occured'})
+                  }
+      
+            })
+            .catch(err => console.log("Problem in fetching profile "+err))
+            }
+          }) 
 
-        })
-        .catch(err => console.log("Problem in fetching profile "+err))
-        }
-    })  
+            
+    })
 })
-})
-
-
-
-
-
-
-
 
 //@type      GET
-//@route     /api/profile/username/:username
-//@desc      route for getting user profile based on username
+//@route     /api/profile/profileimage/:filename
+//@desc      route for getting user profile pic based on filename
 //@access    PUBLIC
-router.get("/username/:username", (req, res) => {
-  Profile.findOne({ username: req.params.username })
-    .then((profile) => {
-      if (!profile) {
-        res.status(404).json({ usernotfound: "User not found" });
-      }
-      res.json(profile);
-    })
-    .catch((err) => console.log("Error in fetching username " + err));
-});
+// This route is used in ejs also
 
-//@type      DELETE
-//@route     /api/profile/delete
-//@desc      route for deleting user based on ID
-//@access    PRIVATE
-router.delete(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Profile.findOne({ user: req.user.id });
-    Profile.findOneAndRemove({ user: req.user.id })
-      .then(() => {
-        Person.findOneAndRemove({ _id: req.user.id })
-          .then(() => res.json({ success: "delete was successful" }))
-          .catch((err) => console.log(err));
+router.get('/image/:filename', (req,res) => {
+  gfs.files.findOne({filename : req.params.filename},(err,file) => {
+    if(!file || file.length ===0){
+      return res.status(404).json({
+        err:'no file exists'
       })
-      .catch((err) => console.log(err));
-  }
-);
+    }
 
-// need to edit below this
+    if(file.contentType === 'image/jpeg' || file.contentType=== 'image/png'){
+      const readstream = gfs.createReadStream(file.filename);
+      readstream.pipe(res);
+    }
+  })
+})
+
+
+
 
 //@type      POST
 //@route     /api/profile/edit/add/novel/
 //@desc      route for adding workrole of a person
 //@access    PRIVATE
 
-router.post("/edit/add/novel/", (req, res) => {
+router.post("/edit/add/novel/", uploadnovelimage, (req, res) => {
   jwt.verify(token, process.env.secret, (err, user) => {
     if (!err) {
       Profile.findOne({ user: user.id })
@@ -205,6 +229,9 @@ router.post("/edit/add/novel/", (req, res) => {
               genre: req.body.genre,
               details: req.body.details,
             };
+            if(req.file){
+              newNovel.novelpic= req.file.filename
+            }
             
             console.log(newNovel);
             let novels = profile.novel;
@@ -234,27 +261,30 @@ router.post("/edit/add/novel/", (req, res) => {
 //@desc      route for deleting a workrole of a person
 //@access    PRIVATE
 
-router.delete(
-  "/edit/delete/:w_id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Profile.findOne({ user: req.user.id })
+router.post("/removenovel", (req, res) => {
+  jwt.verify(token, process.env.secret, (err, user) => {
+    if(err){
+      res.redirect("/api/auth/login");
+    }
+    Profile.findOne({ user: user.id })
       .then((profile) => {
         if (!profile) res.json({ notfound: "Profile not found" });
         else {
           const removethis = profile.novel
-            .map((item) => item.id)
-            .indexOf(req.params.w_id);
+            .map((item) => item.name)
+            .indexOf(req.body.toberemoved);
 
           profile.novel.splice(removethis, 1);
 
-          profile.findOneAndUpdate
-            .then((profile) => res.json(profile))
+          profile.findOneAndUpdate()
+            .then(
+              res.redirect("/api/profile/?valid=" + token))
             .catch((err) => console.log(err));
         }
       })
       .catch((err) => console.log(err));
-  }
-);
+  })
+});
 
-module.exports = router;
+
+module.exports = router

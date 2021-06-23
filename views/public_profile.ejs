@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>profile</title>
+    <script
+      src="https://kit.fontawesome.com/64d58efce2.js"
+      crossorigin="anonymous"
+    ></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/profileStyle.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="row header">
+            <a href="">logout</a>
+            <% if(myprofile && token){ %>
+                <a href=""><img src="image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
+            <% } else{ %>
+                <a href="//localhost:3000/api/auth/login/">signin/signup</a>
+            <% } %>
+        </div>
+
+        <!-- navigation bar -->
+        <div class="row navigation_bar mb-5 p-2">
+            <nav>
+                <a href="">Home</a>
+                </nav>
+
+            <!-- home is dashboard -->
+        </div>
+
+        <!--  requested profile personal info -->
+
+        <div class="row personal_info align-items-start">
+            <div class="col-sm-5 col-md-4 order-sm-last p-5">
+                <!-- <img src="//localhost:3000/image/<%= reqprofile.profilepic%>" class="profile_image"> --> 
+                <!-- above statement works -->
+                <img src="/image/<%= reqprofile.profilepic%>" class="profile_image">
+            </div>
+            
+            <div class="col-sm-7 col-md-8 order-sm-first" >
+                <div class="row p-4"><h1><%=reqprofile.username%></h1></div>
+                <ul class="personal_info_list">
+                    <li>Name: <%=reqprofile.name%></li>
+                    <li>Contact: <%=reqprofile.contactno%></li>
+                    <li>Address: <%=reqprofile.address%></li>
+                    <li>Interested in: <%=reqprofile.myGenre%></li>
+                    <li>Joined: <%=reqprofile.date%></li>
+                </ul>
+                
+            </div>
+        </div>
+
+        <!-- requested profile novels column -->
+        
+        <div class="row mynovels_info mt-2 p-4">
+            <div class="col-12 p-3"><h1>My Novels</h1></div>
+
+            <div class="px-3 py-1" style="display: flex; overflow-x: scroll;">
+            <% reqprofile.novel.forEach(function (novel) {  %>
+                <div class="novel_cards col-3 py-3 mx-1 my-1">
+                    <img src="image/<%= novel.novelpic%>" class="novel_image">
+                    <ul class="novel_info_list">
+                        <li><%=novel.name%></li>
+                        <li><%=novel.author%></li>
+                        <li><%=novel.genre%></li>
+                        <li><%=novel.details%></li>
+                    </ul>
+                </div>
+            <% }) %>
+            </div>
+        </div>
+
+        <!-- Genre -->
+        <div class="row"></div>
+
+    </div>
+    <script src="/scripts/profileScript.js"></script>
+</body>
+</html>

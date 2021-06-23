@@ -23,7 +23,7 @@ const ProfileSchema = new Schema({
     },
     profilepic:  {
         type : String,
-        default : "https://k2partnering.com/wp-content/uploads/2016/05/Person.jpg"
+        default : "1a9b159534ebf0fbae07f80fdffa4968.jpeg"
     },
     novel: [
         {
@@ -33,24 +33,22 @@ const ProfileSchema = new Schema({
             },
             novelpic:{
                 type: String,
-                default: ""
+                default: "36e48cc164a2701c8e8c9128f0d89440.png"
             },
             author: {
                 type:String
             },
-            genre:[
-                    {
-                    type:String,
-                }
-            ],
+            genre:{
+                type: String,
+            },
             details: {
                 type:String
             }
         }
     ],
-    myGenre:[{
+    myGenre:{
         type: String
-    }],
+    },
     date: {
         type: Date,
         default: Date.now

@@ -52,11 +52,27 @@
 }
 
 .novel_image{
-    height:80%;
-    width:80%;
+    height:50%;
+    width:50%;
     border: 1px solid gray;
+    display: block;
+    margin: auto;
 }
 
+.novel_cards{
+    border: 1px solid gray;
+    overflow: hidden;
+}
+.novel_cards :hover{
+    overflow: auto;
+}
+
+.novel_info_list{
+    font-size: small;
+    display: block;
+    margin:auto;
+
+}
 
 @media (max-width:574px){
     .personal_info , .mynovels_info, .mynovels_edit ,.my_genres , .personal_info_edit{

@@ -10,19 +10,19 @@
       crossorigin="anonymous"
     ></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/profileStyle.css" />
+    <link rel="stylesheet" href="/css/profileStyle.css" />
 </head>
 <body>
     <div class="container">
         <div class="row header">
-            <a href="">logout</a>
-            <a href=""><img src="<%=profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
+            <a href="//localhost:3000/api/auth/login">logout</a>
+            <a href=""><img src="//localhost:3000/image/<%=profile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
             
         </div>
 
         <!-- navigation bar -->
         <div class="row navigation_bar mb-5 p-2">
-            <nav><a href="">Home</a></nav>
+            <nav><a href="//localhost:3000/?valid=<%= token %>">Home</a></nav>
             <!-- home is dashboard -->
         </div>
 
@@ -30,15 +30,23 @@
 
         <div class="row personal_info align-items-start">
             <div class="col-sm-5 col-md-4 order-sm-last p-5">
-                <img src="<%=profilepic%>" class="profile_image">
+                <img src="//localhost:3000/image/<%= profile.profilepic%>" class="profile_image">
+
+                <% if(profile) %>
+                <form action="/api/profile/addprofilepic" method="POST" enctype="multipart/form-data"><input type="file" name="profileimage" id="profilepic_upload">
+                <button type="submit" class="btn-sm">Upload</button>
+                </form>
+
             </div>
+            
             <div class="col-sm-7 col-md-8 order-sm-first" >
-                <div class="row p-4"><h1><%=username%></h1></div>
+                <div class="row p-4"><h1><%=profile.username%></h1></div>
                 <ul class="personal_info_list">
-                    <li>Name: <%=name%></li>
-                    <li>Contact: <%=contactno%></li>
-                    <li>Address: <%=address%></li>
-                    <li>Last modified: <%=name%></li>
+                    <li>Name: <%=profile.name%></li>
+                    <li>Contact: <%=profile.contactno%></li>
+                    <li>Address: <%=profile.address%></li>
+                    <li>Interested in: <%=profile.myGenre%></li>
+                    <li>Joined: <%=profile.name%></li>
                 </ul>
                 <div class="row p-3 m-3 mt-5"><button class="btn btn-primary mt-5 " style="width: fit-content;" id="info_edit_button">Edit</button></div>
                 
@@ -49,22 +57,18 @@
 
         <div class="row personal_info_edit align-items-start">
             <div class="col-sm-5 col-md-4 order-sm-last p-5">
-                <img src="<%=profilepic%>" class="profile_image">
-
-                <form action="/api/profile/addprofilepic" method="POST" enctype="multipart/form-data"><input type="file" name="profileimage" id="profilepic_upload">
-                <button type="submit" class="btn-sm">Upload</button>
-                </form>
-
+                <img src="//localhost:3000/image/<%=profile.profilepic%>" class="profile_image">
             </div>
             <div class="col-sm-7 col-md-8 order-sm-first" >
 
-                <div class="row p-4"><h1><%=username%></h1></div>
+                <div class="row p-4"><h1><%=profile.username%></h1></div>
                 <form action="/api/profile/edit" method="POST">
                 <ul class="personal_info_list">z
-                    <li><pre>Name:          <input type="text" name="name" value="<%=name%>"></pre></li>
-                    <li><pre>Contact:       <input type="text" name="contact" value="<%=contactno%>"></pre></li>
-                    <li><pre>Address:       <input type="text" name="address" value="<%=address%>"></pre></li>
-                    <li><pre>Last modified: <%=date%></pre></li>
+                    <li><pre>Name:          <input type="text" name="name" value="<%=profile.name%>"></pre></li>
+                    <li><pre>Contact:       <input type="text" name="contact" value="<%=profile.contactno%>"></pre></li>
+                    <li><pre>Address:       <input type="text" name="address" value="<%=profile.address%>"></pre></li>
+                    <li><pre>Interested in: <input type="text" name="myGenre" value="<%=profile.myGenre%>"></pre></li>
+                    <li><pre>Joinedd:       <%=profile.date%></pre></li>
                 </ul>
                 <div class="row p-3 m-3 mt-5">
                     <button class="btn-sm btn-primary mt-5 " style="width:fit-content;" type="submit">submit</button>
@@ -81,14 +85,29 @@
         
         <div class="row mynovels_info mt-2 p-4">
             <div class="col-12 p-3"><h1>My Novels</h1></div>
+                <div class="px-3 py-1" style="display: flex; overflow-x: scroll;">
+                    <% profile.novel.forEach(function (novel) {  %>
+                    <div class="novel_cards col-3 py-3 mx-1 my-1">
+                    <img src="//localhost:3000/image/<%= novel.novelpic%>" class="novel_image">
+                    <ul class="novel_info_list">
+                        <li><%=novel.name%></li>
+                        <li><%=novel.author%></li>
+                        <li><%=novel.genre%></li>
+                        <li><%=novel.details%></li>
+                    </ul>
+                    </div>
+                    <% }) %>
+                </div>
+
 
             <div class="row"> 
                 <div class="col-md-5 col-sm-3">
                     <button class="btn-sm btn-success" style="width: fit-content;" id="novel_add_button">Add</button>
                 </div>
 
+
                 <div class="col-md-7 col-sm-9">
-                    <form action="/api/profile/removenovel" class="remove_novel_button">
+                    <form action="/api/profile/removenovel" class="remove_novel_button" method="POST">
                         <input type="text">
                         <button type="submit" class="btn-sm btn-danger" style="width: fit-content;">Remove</button>
                     </form>
@@ -104,23 +123,21 @@
             <div class="col-12 p-3"><h1>My Novels</h1></div>
 
             <div class="row align-items-start" style="padding: -30px;"> 
-                <div class="col-sm-5 col-md-4 order-sm-last mt-2">
-                    <img src="<%=profilepic%>" class="novel_image">
-                    <form action="/api/profile/addnovelpic" method="POST"><input type="file">
-                    <button type="submit" class="btn-sm">Upload</button>
-                    </form>
-                </div>
+                
 
                 <div class="col-sm-7 col-md-8 order-sm-first mt-2" >
-                    <form action="/api/profile/edit/add/novel" method="POST">
+                    <form action="/api/profile/edit/add/novel" method="POST" enctype="multipart/form-data">
                     <ul class="novel_info_list">
                         <li><pre>Name:    <input type="text" name="name"></pre></li>
                         <li><pre>Author:  <input type="text" name="author"></pre></li>
                         <li><pre>Genre:   <input type="text" name="genre"></pre></li>
                         <li><pre>Details: <input type="text" name="details"></pre></li></pre></li>
+                        <li><pre>image: <input type="file" name="novelimage"></pre></li></pre></li>
+
                     </ul>
                     <div class="row p-3 m-3 mt-5">
                         <button class="btn-sm btn-success mt-5 " style="width:fit-content;" type="submit">Add</button>
+
                         <!-- after submitting , redirect to profile page     -->
                     </div>
                 </form>
@@ -128,9 +145,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- My Genre -->
-        <div class="row"></div>
 
     </div>
     <script src="/scripts/profileScript.js"></script>
