@@ -17,7 +17,7 @@
         <div class="row header">
             <a href="">logout</a>
             <% if(myprofile && token){ %>
-                <a href=""><img src="image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
+                <a href=""><img src="//localhost:3000/image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
             <% } else{ %>
                 <a href="//localhost:3000/api/auth/login/">signin/signup</a>
             <% } %>
@@ -38,7 +38,7 @@
             <div class="col-sm-5 col-md-4 order-sm-last p-5">
                 <!-- <img src="//localhost:3000/image/<%= reqprofile.profilepic%>" class="profile_image"> --> 
                 <!-- above statement works -->
-                <img src="/image/<%= reqprofile.profilepic%>" class="profile_image">
+                <img src="//localhost:3000/image/<%= reqprofile.profilepic%>" class="profile_image">
             </div>
             
             <div class="col-sm-7 col-md-8 order-sm-first" >
@@ -60,7 +60,8 @@
             <div class="col-12 p-3"><h1>My Novels</h1></div>
 
             <div class="px-3 py-1" style="display: flex; overflow-x: scroll;">
-            <% reqprofile.novel.forEach(function (novel) {  %>
+            <% if(reqnovels) { %>
+            <% reqnovels.forEach(function (novel) {  %>
                 <div class="novel_cards col-3 py-3 mx-1 my-1">
                     <img src="image/<%= novel.novelpic%>" class="novel_image">
                     <ul class="novel_info_list">
@@ -71,6 +72,7 @@
                     </ul>
                 </div>
             <% }) %>
+            <% } %>
             </div>
         </div>
 

@@ -69,7 +69,7 @@ router.post("/signup", (req, res) => {
               .save()
               .then((profile) => {
                 // passing json web token to url as queries ?calid is varaible that hold my json web token
-                res.redirect("/?valid=" +   jwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
+                res.redirect("/api/profile/?valid=" +   jwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
               })
               .catch((err) => console.log(err));
           }
@@ -113,7 +113,7 @@ router.post("/login", (req, res) => {
             };
 
             // passing json web token to url as queries ?calid is varaible that hold my json web token
-            res.redirect("/?valid=" +   jwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
+            res.redirect("/api/profile/?valid=" +   jwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
             
         
         } else {

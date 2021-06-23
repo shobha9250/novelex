@@ -15,6 +15,10 @@ const Person = require("../../models/Person");
 
 //load profile model
 const Profile = require("../../models/Profile");
+
+//load novel model
+const Novel = require("../../models/Novel");
+
 const { route, connect } = require("./auth");
 const { JsonWebTokenError } = require("jsonwebtoken");
 const { rejects } = require("assert");
@@ -77,25 +81,21 @@ router.get("/", (req, res) => {
               .status(404)
               .json({ profilenotfound: "no profile found" });
           }
-
-          gfs.files.find().toArray((err, files) => {
-            if(err)
-              return console.log ("there is some error");
-
-            if(!files || files.length === 0){
-              res.render("profile", {profile:profile, files:false});
-            }
-            else{
-              files.map(file =>{
-                if(file.contentType == 'image/jpeg' || file.contentType == 'image/png'){
-                  file.isImage = true;
-                }else{
-                  file.isImage = false;
-                }
+            Novel.find()
+            .then((novels) => {
+              let mynovels= [];
+              mynovels= novels.filter(novel =>{
+                if(novel.user._id == user.id){
+                  return novel;
+                  }
               })
-              res.render("profile", {profile:profile, files:files, token:token});
-            }
-          })
+              
+              
+              res.render("profile", {profile:profile, mynovels:mynovels, token:token});
+              
+            })
+            .catch((err)=> console.log(err))
+
         })
         .catch((err) => console.log("Got some error in profile " + err));
     } else {
@@ -223,27 +223,19 @@ router.post("/edit/add/novel/", uploadnovelimage, (req, res) => {
         .then((profile) => {
           if (!profile) return res.json({ failure: "profile not found" });
           else {
-            const newNovel = {
+            const newNovel = new Novel({
               name: req.body.name,
               author: req.body.author,
               genre: req.body.genre,
               details: req.body.details,
-            };
+              user: user.id
+            });
             if(req.file){
               newNovel.novelpic= req.file.filename
             }
             
-            console.log(newNovel);
-            let novels = profile.novel;
-            novels.push(newNovel);
-            console.log(novels);
-
-            Profile.findOneAndUpdate(
-                { user: user.id },
-                { $set: {novel : novels} },
-                { new: true }
-              )
-                .then((profile) => {
+            newNovel.save()
+                .then((novel) => {
                   res.redirect("/api/profile/?valid=" + token);
                 })
                 .catch((err) => console.log("Problem in update " + err));
@@ -266,22 +258,16 @@ router.post("/removenovel", (req, res) => {
     if(err){
       res.redirect("/api/auth/login");
     }
-    Profile.findOne({ user: user.id })
-      .then((profile) => {
-        if (!profile) res.json({ notfound: "Profile not found" });
-        else {
-          const removethis = profile.novel
-            .map((item) => item.name)
-            .indexOf(req.body.toberemoved);
+    
+    Novel.findOne({name: req.body.toberemoved});
+     Novel.findOneAndRemove({name: req.body.toberemoved})
+    .then(()=>{
+        Novel.findOneAndRemove({name: req.body.toberemoved})
+        .then(() => res.redirect('/api/profile/?valid=' + token))
+        .catch(err => console.log(err))
+    })
+    .catch(err => console.log(err))
 
-          profile.novel.splice(removethis, 1);
-
-          profile.save()
-            .then(res.redirect("/api/profile/?valid=" + token))
-            .catch((err) => console.log(err));
-        }
-      })
-      .catch((err) => console.log(err));
   })
 });
 

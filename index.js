@@ -25,6 +25,7 @@ const port = process.env.PORT || 3000;
 const auth = require('./routes/api/auth')
 const profile = require('./routes/api/profile')
 
+
 //static files
 app.use(express.static("public"))
 
@@ -56,6 +57,8 @@ const Person = require("./models/Person");
 //load profile model
 const Profile = require("./models/Profile");
 
+const Novel = require("./models/Novel");
+
 
 //init gfs
 let gfs;
@@ -79,9 +82,8 @@ app.get("/", (req, res) => {
     //getting token from query
     token = req.query.valid;
   
-    Profile.find()
-    .then((profiles)=> {
-    
+    Novel.find()
+    .then((novels)=> {
     jwt.verify(token, process.env.secret, (err, user) => {
       if (!err) {
         Profile.findOne({ user: user.id })
@@ -91,17 +93,19 @@ app.get("/", (req, res) => {
                 .status(404)
                 .json({ profilenotfound: "no profile found" });
             }
-  
-            res.render("dashboard",({myprofile: profile, allprofiles: profiles, token:token}))
+            
+            
+
+            res.render("dashboard",({myprofile: profile, token:token, allnovels:novels}))
           })
           .catch((err) => console.log("Got some error in profile " + err));
       } else {
-        res.render("dashboard",({myprofile:false, allprofiles:profiles, token:false}))
+        res.render("dashboard",({myprofile:false, token:false, allnovels:novels}))
       }
     });
 
     })
-    .catch((err) =>console.log("error"))
+    .catch((err) => console.log(err))
 });
 
 
@@ -112,47 +116,54 @@ app.get("/:username", (req, res) => {
       if (!reqprofile) {
         res.status(404).json({ usernotfound: "User not found" });
       }
-      jwt.verify(token, process.env.secret, (err, user) => {
-        if (!err) {
-          Profile.findOne({ user: user.id })
-            .then((myprofile) => {
-              if (!myprofile) {
-                return res
-                  .status(404)
-                  .json({ profilenotfound: "no profile found" });
-              }
-              res.render("public_profile",({myprofile:myprofile, reqprofile:reqprofile ,token:token}))
-    
-    
-            })
-            .catch((err) => console.log("Got some error in profile " + err));
-        } else {
-          res.render("public_profile",({myprofile:false, reqprofile:reqprofile ,token:false}))
-        }
-      });
+      
+      let reqnovels=[];
+      
+      Novel.find()
+      .then((novels) => {
+        reqnovels= novels.filter( (novel)=>{
+          if(novel.user._id.toString() == reqprofile.user._id.toString()){
+            return novel;
+            
+          }
+        })
+        
+
+        jwt.verify(token, process.env.secret, (err, user) => {
+          if (!err) {
+            Profile.findOne({ user: user.id })
+              .then((myprofile) => {
+                if (!myprofile) {
+                  return res
+                    .status(404)
+                    .json({ profilenotfound: "no profile found" });
+                }
+                
+                
+                res.render("public_profile",({myprofile:myprofile, reqprofile:reqprofile ,token:token, reqnovels:reqnovels}))
+      
+      
+              })
+              .catch((err) => console.log("Got some error in profile " + err));
+          } else {
+            
+            res.render("public_profile",({myprofile:false, reqprofile:reqprofile ,token:false, reqnovels:reqnovels}))
+          }
+        });
+
+      })
+      .catch((err)=> console.log(err));
+     
+
+      
 
     })
     .catch((err) => console.log("Error in fetching username " + err));
 });
 
-
-app.get('/:username/image/:filename', (req,res) => {
-    gfs.files.findOne({filename : req.params.filename},(err,file) => {
-      if(!file || file.length ===0){
-        return res.status(404).json({
-          err:'no file exists'
-        })
-      }
-  
-      if(file.contentType === 'image/jpeg' || file.contentType=== 'image/png'){
-        const readstream = gfs.createReadStream(file.filename);
-        readstream.pipe(res);
-      }
-    })
-  })
-
-
   app.get('/image/:filename', (req,res) => {
+    if(!gfs)
+      return console.log("error");
     gfs.files.findOne({filename : req.params.filename},(err,file) => {
       if(!file || file.length ===0){
         return res.status(404).json({
