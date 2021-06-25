@@ -14,7 +14,7 @@
     <div class="row">
         <!-- if the user is logged in -->
         <% if(myprofile && token) { %>
-        <a href="//localhost:3000/api/profile/?valid=<%= token %>"><img src="//localhost:3000/image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
+        <a href="//localhost:3000/api/profile"><img src="//localhost:3000/image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
         <a href="//localhost:3000/api/auth/logout/">logout</a>
         <% } else { %>
  
@@ -27,7 +27,7 @@
             <% if(allnovels) {%>
                 <% allnovels.forEach(function (novel) { %>
                     <div class="novel_cards col-3">
-                    <a href="/<%=novel.user.username%>/?valid=<%=token%>"><%=novel.user.username%></a>
+                    <a href="/<%=novel.user.username%>"><%=novel.user.username%></a>
                     <img src="//localhost:3000/image/<%= novel.novelpic%>" class="novel_image">
                     <ul class="novel_info_list">
                         <li><%=novel.name%></li>

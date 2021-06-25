@@ -16,6 +16,7 @@ const passport= require('passport')
 const mongoose= require('mongoose')
 const jwt = require("jsonwebtoken");
 const Grid = require('gridfs-stream');
+const cookies = require('cookie-parser');
 
 
 const app= express();
@@ -32,6 +33,7 @@ app.use(express.static("public"))
 //middleware for body parser
 app.use(bodyparser.urlencoded({extended: false}))
 app.use(bodyparser.json())
+app.use(cookies())
 
 //setting view engine
 app.set("view engine","ejs")
@@ -80,7 +82,7 @@ conn.once('open',() => {
 let token;
 app.get("/", (req, res) => {
     //getting token from query
-    token = req.query.valid;
+    token = req.cookies['token'];
   
     Novel.find()
     .then((novels)=> {

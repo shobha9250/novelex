@@ -69,7 +69,8 @@ router.post("/signup", (req, res) => {
               .save()
               .then((profile) => {
                 // passing json web token to url as queries ?calid is varaible that hold my json web token
-                res.redirect("/api/profile/?valid=" +   jwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
+                res.cookie('token', jwt.sign(payload,process.env.secret,{expiresIn: 3600}));
+                res.redirect("/api/profile");
               })
               .catch((err) => console.log(err));
           }
@@ -113,7 +114,8 @@ router.post("/login", (req, res) => {
             };
 
             // passing json web token to url as queries ?calid is varaible that hold my json web token
-            res.redirect("/api/profile/?valid=" +   jwt.sign(payload, process.env.secret, { expiresIn: 3600 }));
+            res.cookie('token', jwt.sign(payload,process.env.secret,{expiresIn: 3600}));
+            res.redirect("/api/profile");
             
         
         } else {
@@ -126,23 +128,8 @@ router.post("/login", (req, res) => {
 });
 
 router.get('/logout',(req,res) =>{
-  let token= req.query.valid;
-
-  jwt.verify(token, process.env.secret,(err,user)=>{
-    if(err)
-      res.redirect("//localhost:3000/");
-
-    Person.findOne({ user: req.user.id })
-    .then((person) => {
-        const payload = {
-        id: person.id,
-        username: person.username,
-        email: person.email,
-      };
-      res.redirect("/?valid=" +   jwt.sign(payload, process.env.secret, { expiresIn: 0 }));
-    })
-    .catch((err) => console.log(err));
-  })
+  res.clearCookie('token');
+  res.redirect("/");
 })
 
 module.exports = router;

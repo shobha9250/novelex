@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require('crypto');
 const {GridFsStorage} = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
+const cookies = require('cookie-parser');
 
 //load person model
 const Person = require("../../models/Person");
@@ -26,7 +27,7 @@ const { resolve } = require("path");
 
 //static files
 router.use(express.static("public"));
-
+router.use(cookies());
 
 // //init gfs
 let gfs;
@@ -66,10 +67,10 @@ const uploadnovelimage =multer({storage}).single("novelimage");
 //@desc      route for personal user profile
 //@access    PRIVATE
 
-let token;
+let token
 router.get("/", (req, res) => {
   //getting token from query
-  token = req.query.valid;
+  token = req.cookies['token'];
 
   //using verify to check my token
   jwt.verify(token, process.env.secret, (err, user) => {
@@ -130,7 +131,7 @@ router.post("/edit/", (req, res) => {
               { new: true }
             )
               .then((profile) => {
-                res.redirect("/api/profile/?valid=" + token);
+                res.redirect("/api/profile");
               })
               .catch((err) => console.log("Problem in update " + err));
           } else {
@@ -171,7 +172,7 @@ router.post('/addprofilepic',(req,res)=>{
                       Profile.findOneAndUpdate({user: user.id},{$set: profileValues}, {new: true})
                       .then(profile => {
                       console.log("Successful ff");
-                      res.redirect("/api/profile/?valid=" + token);
+                      res.redirect("/api/profile");
                       })
                       .catch(err => console.log("Problem in update "+err))       
                  }else{
@@ -236,7 +237,7 @@ router.post("/edit/add/novel/", uploadnovelimage, (req, res) => {
             
             newNovel.save()
                 .then((novel) => {
-                  res.redirect("/api/profile/?valid=" + token);
+                  res.redirect("/api/profile");
                 })
                 .catch((err) => console.log("Problem in update " + err));
             }
@@ -263,7 +264,7 @@ router.post("/removenovel", (req, res) => {
      Novel.findOneAndRemove({name: req.body.toberemoved})
     .then(()=>{
         Novel.findOneAndRemove({name: req.body.toberemoved})
-        .then(() => res.redirect('/api/profile/?valid=' + token))
+        .then(() => res.redirect('/api/profile'))
         .catch(err => console.log(err))
     })
     .catch(err => console.log(err))
