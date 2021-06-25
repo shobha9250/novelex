@@ -32,7 +32,6 @@
             <div class="col-sm-5 col-md-4 order-sm-last p-5">
                 <img src="//localhost:3000/image/<%= profile.profilepic%>" class="profile_image">
 
-                <% if(profile) %>
                 <form action="/api/profile/addprofilepic" method="POST" enctype="multipart/form-data"><input type="file" name="profileimage" id="profilepic_upload">
                 <button type="submit" class="btn-sm">Upload</button>
                 </form>
@@ -86,7 +85,9 @@
         <div class="row mynovels_info mt-2 p-4">
             <div class="col-12 p-3"><h1>My Novels</h1></div>
                 <div class="px-3 py-1" style="display: flex; overflow-x: scroll;">
-                    <% profile.novel.forEach(function (novel) {  %>
+                    <% if(mynovels){ %>
+                    <% mynovels.forEach(function (novel) {  %>
+                    <% if(novel){ %>
                     <div class="novel_cards col-3 py-3 mx-1 my-1">
                     <img src="//localhost:3000/image/<%= novel.novelpic%>" class="novel_image">
                     <ul class="novel_info_list">
@@ -96,7 +97,10 @@
                         <li><%=novel.details%></li>
                     </ul>
                     </div>
+                    <% } %>
                     <% }) %>
+                
+                    <% } %>
                 </div>
 
 
@@ -108,7 +112,7 @@
 
                 <div class="col-md-7 col-sm-9">
                     <form action="/api/profile/removenovel" class="remove_novel_button" method="POST">
-                        <input type="text">
+                        <input type="text" name="toberemoved" required>
                         <button type="submit" class="btn-sm btn-danger" style="width: fit-content;">Remove</button>
                     </form>
                 </div>
@@ -128,9 +132,9 @@
                 <div class="col-sm-7 col-md-8 order-sm-first mt-2" >
                     <form action="/api/profile/edit/add/novel" method="POST" enctype="multipart/form-data">
                     <ul class="novel_info_list">
-                        <li><pre>Name:    <input type="text" name="name"></pre></li>
-                        <li><pre>Author:  <input type="text" name="author"></pre></li>
-                        <li><pre>Genre:   <input type="text" name="genre"></pre></li>
+                        <li><pre>Name:    <input type="text" name="name" required></pre></li>
+                        <li><pre>Author:  <input type="text" name="author" required></pre></li>
+                        <li><pre>Genre:   <input type="text" name="genre" required></pre></li>
                         <li><pre>Details: <input type="text" name="details"></pre></li></pre></li>
                         <li><pre>image: <input type="file" name="novelimage"></pre></li></pre></li>
 

@@ -24,10 +24,10 @@
         <% } %>
     </div>
         <div class="row">
-            <% allprofiles.forEach(function (profile) {  %>
-                <% profile.novel.forEach(function (novel) { %>
+            <% if(allnovels) {%>
+                <% allnovels.forEach(function (novel) { %>
                     <div class="novel_cards col-3">
-                    <a href="/<%=profile.username%>/?valid=<%=token%>"><%=profile.username%></a>
+                    <a href="/<%=novel.user.username%>/?valid=<%=token%>"><%=novel.user.username%></a>
                     <img src="//localhost:3000/image/<%= novel.novelpic%>" class="novel_image">
                     <ul class="novel_info_list">
                         <li><%=novel.name%></li>
@@ -37,7 +37,7 @@
                     </ul>
                     </div>
                 <% }) %>
-            <% }) %>
+                <% } %>
         </div>
     </div>
 </body>
