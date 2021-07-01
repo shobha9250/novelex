@@ -14,23 +14,48 @@
 </head>
 <body>
     <div class="container">
-        <div class="row header">
-            <a href="">logout</a>
-            <% if(myprofile && token){ %>
-                <a href=""><img src="//localhost:3000/image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
-            <% } else{ %>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6"><h1><i class="fas fa-book-reader"></i>Novelex</h1></div>
+                <div class="col-6 my-auto" style="text-align: end;">
+                <!-- if the user is logged in -->
+                <% if(myprofile && token) { %>
+                <a href="//localhost:3000/api/profile"><img src="//localhost:3000/image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
+                <a href="//localhost:3000/api/auth/logout/">logout</a>
+                <% } else { %>
+         
+                <!-- if user is not logged in -->
                 <a href="//localhost:3000/api/auth/login/">signin/signup</a>
-            <% } %>
-        </div>
-
-        <!-- navigation bar -->
-        <div class="row navigation_bar mb-5 p-2">
-            <nav>
-                <a href="">Home</a>
-                </nav>
-
-            <!-- home is dashboard -->
-        </div>
+                <% } %>
+                </div>
+            </div>
+            </div>
+            <div class="container-fluid">
+            <div class="row">
+                
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="width:100vw;">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">About us</a>
+                </li>
+              </ul>
+              <form class="form-inline my-2 my-lg-0" action="/finduser" method="POST">
+                <input class="form-control mr-sm-2" name="find_user" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
+            </div>
+          </nav>
+          
+          </div>
+          </div>
 
         <!--  requested profile personal info -->
 
@@ -62,7 +87,7 @@
             <div class="px-3 py-1" style="display: flex; overflow-x: scroll;">
             <% if(reqnovels) { %>
             <% reqnovels.forEach(function (novel) {  %>
-                <div class="novel_cards col-3 py-3 mx-1 my-1">
+                <div class="novel_cards col-lg-2 col-sm-3 col-5 m-sm-1 mx-auto py-3">
                     <img src="image/<%= novel.novelpic%>" class="novel_image">
                     <ul class="novel_info_list">
                         <li><%=novel.name%></li>

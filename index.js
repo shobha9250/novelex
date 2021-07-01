@@ -110,9 +110,13 @@ app.get("/", (req, res) => {
     .catch((err) => console.log(err))
 });
 
+app.post("/finduser", (req,res) => {
+  const finduser = req.body.find_user;
+  res.redirect(`/user/${finduser}`);
+})
 
-app.get("/:username", (req, res) => {
-  token = req.query.valid;
+app.get("/user/:username", (req, res) => {
+  token = req.cookies['token'];
   Profile.findOne({ username: req.params.username })
     .then((reqprofile) => {
       if (!reqprofile) {
@@ -163,9 +167,10 @@ app.get("/:username", (req, res) => {
     .catch((err) => console.log("Error in fetching username " + err));
 });
 
-  app.get('/image/:filename', (req,res) => {
+
+app.get('/image/:filename', (req,res) => {
     if(!gfs)
-      return console.log("error");
+      return console.log("error tt");
     gfs.files.findOne({filename : req.params.filename},(err,file) => {
       if(!file || file.length ===0){
         return res.status(404).json({

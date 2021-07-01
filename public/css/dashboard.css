@@ -2,3 +2,44 @@
     height:30px;
     width:30px;
 }
+button p nav{
+    margin:0px;
+}
+
+.fa-book-reader{
+    transition:all linear;
+    animation:  rot 3s linear infinite ;
+}
+
+@keyframes rot {
+    0%{
+        transform: rotate(20deg);
+    }
+    50%{
+        transform: rotate(-10deg);
+    }
+    100%{
+        transform: rotate(20deg);
+    }
+}
+
+.novel_cards_dashboard{
+    border: 1px solid gray;
+    height: 35vh;
+    overflow: hidden;
+}
+
+@media (max-width:575px){
+    .novel_cards_dashboard{
+        display: inline-block;
+        width:40vw;
+        height:40vh;
+    }
+}
+@media (max-width:330px){
+    .novel_cards_dashboard{
+        display: block;
+        width:80vw;
+        height:40vh;
+    }
+}
