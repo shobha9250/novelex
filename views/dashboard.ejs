@@ -30,12 +30,12 @@
             <div class="col-6 my-auto" style="text-align: end;">
             <!-- if the user is logged in -->
             <% if(myprofile && token) { %>
-            <a href="//localhost:3000/api/profile"><img src="//localhost:3000/image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
-            <a href="//localhost:3000/api/auth/logout/">logout</a>
+            <a href="//novelex.herokuapp.com/api/profile"><img src="//novelex.herokuapp.com/image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
+            <a href="//novelex.herokuapp.com/api/auth/logout/">logout</a>
             <% } else { %>
      
             <!-- if user is not logged in -->
-            <a href="//localhost:3000/api/auth/login/">signin/signup</a>
+            <a href="//novelex.herokuapp.com/api/auth/login/">signin/signup</a>
             <% } %>
             </div>
         </div>
@@ -72,8 +72,8 @@
             <% if(allnovels) {%>
                 <% allnovels.forEach(function (novel) { %>
                     <div class="novel_cards_dashboard col-lg-2 col-sm-3 m-sm-1 mx-auto my-1">
-                    <a href="//localhost:3000/user/<%=novel.user.username%>" style="margin: 10px; color: black;">
-                    <img src="//localhost:3000/image/<%= novel.novelpic%>" class="novel_image">
+                    <a href="//novelex.herokuapp.com/user/<%=novel.user.username%>" style="margin: 10px; color: black;">
+                    <img src="//novelex.herokuapp.com/image/<%= novel.novelpic%>" class="novel_image">
                     </a>
                     <ul class="novel_info_list">
                         <li><%=novel.name%></li>

@@ -34,12 +34,12 @@
         <div class="col-6 my-auto" style="text-align: end;">
         <!-- if the user is logged in -->
         <% if(myprofile && token) { %>
-        <a href="//localhost:3000/api/profile"><img src="//localhost:3000/image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
-        <a href="//localhost:3000/api/auth/logout/">logout</a>
+        <a href="//novelex.herokuapp.com/api/profile"><img src="//novelex.herokuapp.com/image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
+        <a href="//novelex.herokuapp.com/api/auth/logout/">logout</a>
         <% } else { %>
  
         <!-- if user is not logged in -->
-        <a href="//localhost:3000/api/auth/login/">signin/signup</a>
+        <a href="//novelex.herokuapp.com/api/auth/login/">signin/signup</a>
         <% } %>
         </div>
     </div>
@@ -77,7 +77,7 @@
             <div class="col-sm-5 col-md-4 order-sm-last p-5">
                 <!-- <img src="//localhost:3000/image/<%= reqprofile.profilepic%>" class="profile_image"> --> 
                 <!-- above statement works -->
-                <img src="//localhost:3000/image/<%= reqprofile.profilepic%>" class="profile_image">
+                <img src="//novelex.herokuapp.com/image/<%= reqprofile.profilepic%>" class="profile_image">
             </div>
             
             <div class="col-sm-7 col-md-8 order-sm-first" >
@@ -102,7 +102,7 @@
             <% if(reqnovels) { %>
             <% reqnovels.forEach(function (novel) {  %>
                 <div class="novel_cards col-lg-2 col-sm-3 col-5 m-sm-1 mx-auto py-3">
-                    <img src="image/<%= novel.novelpic%>" class="novel_image">
+                    <img src="//novelex.herokuapp.com/image/<%= novel.novelpic%>" class="novel_image">
                     <ul class="novel_info_list">
                         <li><%=novel.name%></li>
                         <li><%=novel.author%></li>
