@@ -47,11 +47,6 @@ mongoose
     .then(() => console.log("MongoDB connected successfully"))
     .catch(err => console.log(err))
 
- //passport middleware
-app.use(passport.initialize())
-
-//config for JWT strategy
-require('./strategies/jsonwtstrategy')(passport)   
 
 //load person model
 const Person = require("./models/Person");
