@@ -4,6 +4,7 @@ const Schema = mongoose.Schema
 const NovelSchema = new Schema({
     user:{
         type: Schema.Types.ObjectId,
+        ref: 'myPerson'
     },
     name: {
         type:String,

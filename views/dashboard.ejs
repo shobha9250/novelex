@@ -72,13 +72,15 @@
             <% if(allnovels) {%>
                 <% allnovels.forEach(function (novel) { %>
                     <div class="novel_cards_dashboard col-lg-2 col-sm-3 m-sm-1 mx-auto my-1">
-                    <a href="/<%=novel.user.username%>"><%=novel.user.username%></a>
+                    <a href="//localhost:3000/user/<%=novel.user.username%>" style="margin: 10px; color: black;">
                     <img src="//localhost:3000/image/<%= novel.novelpic%>" class="novel_image">
+                    </a>
                     <ul class="novel_info_list">
                         <li><%=novel.name%></li>
                         <li><%=novel.author%></li>
                         <li><%=novel.genre%></li>
                         <li><%=novel.details%></li>
+                        <li><%=novel.user.username%></li>
                     </ul>
                     </div>
                 <% }) %>

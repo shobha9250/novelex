@@ -72,6 +72,23 @@
 
 }
 
+.fa-book-reader{
+    transition:all linear;
+    animation:  rot 3s linear infinite ;
+}
+
+@keyframes rot {
+    0%{
+        transform: rotate(20deg);
+    }
+    50%{
+        transform: rotate(-10deg);
+    }
+    100%{
+        transform: rotate(20deg);
+    }
+}
+
 @media (max-width:574px){
     .personal_info , .mynovels_info, .mynovels_edit ,.my_genres , .personal_info_edit{
         border: 0px;

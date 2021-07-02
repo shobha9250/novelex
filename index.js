@@ -85,6 +85,7 @@ app.get("/", (req, res) => {
     token = req.cookies['token'];
   
     Novel.find()
+    .populate('user', ['username'])
     .then((novels)=> {
     jwt.verify(token, process.env.secret, (err, user) => {
       if (!err) {
