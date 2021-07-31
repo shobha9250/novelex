@@ -2,20 +2,23 @@
 *{
     font-family: "Poppins", sans-serif;
 }
-.personal_info_list, .novel_info_list{
+.personal_info_list, .novel_info_list, .novel_info_list_form{
     list-style: none;
     line-height: 2rem;
     word-wrap: break-word;
 
 }
-.personal_info_list input , .novel_info_list input{
+.personal_info_list input {
     height:1.5rem;
     width:50%;
 }
+.novel_info_list_form input{
+    height:1.5rem;
+}
 .profile_image{
-    height:100%;
-    width:100%;
-    border-radius: 10%;
+    height:200px;
+    width:200px;
+    border-radius: 6%;
     border: 1px solid gray;
 }
 
@@ -52,24 +55,29 @@
 }
 
 .novel_image{
-    height:50%;
-    width:60%;
+    height:100px;
+    width:80px;
     border: 1px solid gray;
     display: block;
     margin: auto;
 }
 
 .novel_cards{
+    display: inline-block;
     border: 1px solid gray;
-    height: 35vh;
     overflow: hidden;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    height:210px;
 }
+
 
 .novel_info_list{
     font-size: small;
     display: block;
-    margin:auto;
-
+    text-align: center;
+    margin-top:5px;
+    margin-left: -40px;
 }
 
 .fa-book-reader{
@@ -89,7 +97,7 @@
     }
 }
 
-@media (max-width:574px){
+@media (max-width:575px){
     .personal_info , .mynovels_info, .mynovels_edit ,.my_genres , .personal_info_edit{
         border: 0px;
     }
@@ -97,30 +105,37 @@
         float:left;
         margin-top:10px;
     }
-    .profile_image, .novel_image{
-        height:80%;
-        width:80%;
-        
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+    .profile_image{
+        height:200px;
+        width:200px;
+        border-radius: 6%;
+        border: 1px solid gray;
     }
-    .personal_info h1{
-        margin-left:10px;
+    .novel_image{
+        height:100px;
+        width:80px;
     }
+    
     .novel_info_list{
         margin-top:20px;
     }
+    
 } 
-@media(max-width:334px)
+@media(max-width:330px)
 {
     .remove_novel_button input{
         width:100%;
         margin-bottom: 10px;
         margin-top:20px;
     }
+    .personal_info_list{
+        font-size:small;
+    }
+    .novel_image{
+        height: 80px;
+        width: 50px;
+    }
     .novel_cards{
-        width: 70%;
-        height: 50%;
+        height:150px;
     }
 }

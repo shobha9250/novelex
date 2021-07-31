@@ -116,7 +116,6 @@ router.post("/login", (req, res) => {
             // passing json web token to url as queries ?calid is varaible that hold my json web token
             res.cookie('token', jwt.sign(payload,process.env.secret,{expiresIn: 3600}));
             res.redirect("/api/profile");
-            
         
         } else {
             res.status(400).json({ passworderror: "password is not correct" });

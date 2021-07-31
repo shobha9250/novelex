@@ -30,8 +30,8 @@
 <body>
   <div class="container-fluid">
     <div class="row">
-        <div class="col-6"><h1><i class="fas fa-book-reader"></i>Novelex</h1></div>
-        <div class="col-6 my-auto" style="text-align: end;">
+        <div class="col-7"><span><h1><i class="fas fa-book-reader"></i>  <b>Novelex</b></h1></span></div>
+        <div class="col-5 my-auto" style="text-align: end;">
         <!-- if the user is logged in -->
         <% if(myprofile && token) { %>
         <a href="//novelex.herokuapp.com/api/profile"><img src="//novelex.herokuapp.com/image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
@@ -55,7 +55,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="//novelex.herokuapp.com/">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">About us</a>
@@ -73,15 +73,15 @@
     <div class="container">
               <!--  requested profile personal info -->
 
-        <div class="row personal_info align-items-start">
-            <div class="col-sm-5 col-md-4 order-sm-last p-5">
+        <div class="row personal_info align-items-start mt-2">
+            <div class=" col-md-5 col-sm-6 order-sm-last px-5 pt-5">
                 <!-- <img src="//localhost:3000/image/<%= reqprofile.profilepic%>" class="profile_image"> --> 
                 <!-- above statement works -->
                 <img src="//novelex.herokuapp.com/image/<%= reqprofile.profilepic%>" class="profile_image">
             </div>
             
-            <div class="col-sm-7 col-md-8 order-sm-first" >
-                <div class="row p-4"><h1><%=reqprofile.username%></h1></div>
+            <div class="col-md-7 col-sm-6 order-sm-first" >
+                <div class="row px-5 pt-5"><h1><%=reqprofile.username%></h1></div>
                 <ul class="personal_info_list">
                     <li>Name: <%=reqprofile.name%></li>
                     <li>Contact: <%=reqprofile.contactno%></li>
@@ -96,15 +96,15 @@
         <!-- requested profile novels column -->
         
         <div class="row mynovels_info mt-2 p-4">
-            <div class="col-12 p-3"><h1>My Novels</h1></div>
+            <div class="col-12 p-3"><h1>Collection</h1></div>
 
-            <div class="px-3 py-1" style="display: flex; overflow-x: scroll;">
+            <div class="col-12 px-3 py-1" style="display: flex; overflow-x: scroll;">
             <% if(reqnovels) { %>
             <% reqnovels.forEach(function (novel) {  %>
-                <div class="novel_cards col-lg-2 col-sm-3 col-5 m-sm-1 mx-auto py-3">
+                <div class="novel_cards col-lg-2 col-sm-4 col-5 py-3">
                     <img src="//novelex.herokuapp.com/image/<%= novel.novelpic%>" class="novel_image">
                     <ul class="novel_info_list">
-                        <li><%=novel.name%></li>
+                        <li><b><%=novel.name%></b></li>
                         <li><%=novel.author%></li>
                         <li><%=novel.genre%></li>
                         <li><%=novel.details%></li>

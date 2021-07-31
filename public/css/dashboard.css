@@ -11,7 +11,14 @@ button p nav{
 .novel_cards_dashboard{
     border: 1px solid gray;
     height: 35vh;
-    overflow: hidden;
+    overflow:hidden;
+}
+.novel_info_list{
+    line-height: 2rem;
+    font-size: small;
+    text-align: center;
+    margin-left: -40px;
+    margin-top: -20px;
 }
 
 @media (max-width:575px){
@@ -24,7 +31,7 @@ button p nav{
 @media (max-width:330px){
     .novel_cards_dashboard{
         display: block;
-        width:80vw;
+        width:60vw;
         height:40vh;
     }
 }

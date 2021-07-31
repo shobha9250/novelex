@@ -19,15 +19,16 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/css/dashboard.css">
+    
     <link rel="stylesheet" href="/css/profileStyle.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
     <title>Dashboard</title>
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-6"><h1><i class="fas fa-book-reader"></i>Novelex</h1></div>
-            <div class="col-6 my-auto" style="text-align: end;">
+            <div class="col-7"><span><h1><i class="fas fa-book-reader"></i>  <b>Novelex</b></h1></span></div>
+            <div class="col-5 my-auto" style="text-align: end;">
             <!-- if the user is logged in -->
             <% if(myprofile && token) { %>
             <a href="//novelex.herokuapp.com/api/profile"><img src="//novelex.herokuapp.com/image/<%=myprofile.profilepic%>" id="profile_icon" style="height: 30px; width:30px;"></a>
@@ -51,7 +52,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="//novelex.herokuapp.com/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">About us</a>
@@ -59,7 +60,7 @@
           </ul>
           <form class="form-inline my-2 my-lg-0" action="/finduser" method="POST">
             <input class="form-control mr-sm-2" name="find_user" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search user</button>
           </form>
         </div>
       </nav>
@@ -76,7 +77,7 @@
                     <img src="//novelex.herokuapp.com/image/<%= novel.novelpic%>" class="novel_image">
                     </a>
                     <ul class="novel_info_list">
-                        <li><%=novel.name%></li>
+                        <li><b><%=novel.name%></b></li>
                         <li><%=novel.author%></li>
                         <li><%=novel.genre%></li>
                         <li><%=novel.details%></li>
@@ -88,4 +89,18 @@
         </div>
     </div>
 </body>
+<script>
+var inputs = document.querySelectorAll('.novel_cards_dashboard');
+      
+    
+      inputs.forEach(function(input) {
+        input.addEventListener('mouseover', function hover() {
+          input.style.overflow = "auto";
+        });
+      
+        input.addEventListener('mouseleave', function leave() {
+          input.style.overflow = "hidden"
+        });
+      });
+</script>
 </html>
